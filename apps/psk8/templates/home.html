@@ -1,0 +1,173 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body class="{% if style == 'serious' %}serious-mode{% endif %}">
+    <header class="main-header text-center">
+        <div class="container">
+            <h1 class="glow-text">Modulación 8-PSK</h1>
+        </div>
+        <!-- Botón de cambio de estilo -->
+        <a href="?style={% if style == 'neon' %}serious{% else %}neon{% endif %}" class="style-toggle">
+            {% if style == 'neon' %}
+            📄 Modo Serio
+            {% else %}
+            ✨ Modo Neon
+            {% endif %}
+        </a>
+    </header>
+
+    <div class="container">
+
+        <!-- TABLA DE CONVERTIDORES 2 A 4 NIVELES -->
+        <div class="exercise-card">
+            <h2 class="card-title">Convertidores de 2 a 4 Niveles</h2>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="table-card">
+                        <h5 class="table-header channel-i">Canal I (I, C)</h5>
+                        <table class="neon-table">
+                            <thead>
+                                <tr>
+                                    <th>I</th>
+                                    <th>C</th>
+                                    <th>Salida (V)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in converter_tables.channel_i %}
+                                <tr>
+                                    <td>{{ row.i }}</td>
+                                    <td>{{ row.c }}</td>
+                                    <td class="value">{{ row.output }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="table-card">
+                        <h5 class="table-header channel-q">Canal Q (Q, -C)</h5>
+                        <table class="neon-table">
+                            <thead>
+                                <tr>
+                                    <th>Q</th>
+                                    <th>-C</th>
+                                    <th>Salida (V)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in converter_tables.channel_q %}
+                                <tr>
+                                    <td>{{ row.q }}</td>
+                                    <td>{{ row.c_inv }}</td>
+                                    <td class="value">{{ row.output }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DESARROLLO MATEMÁTICO -->
+        <div class="exercise-card">
+            <h2 class="card-title">Desarrollo Matemático</h2>
+            
+            <div class="development-list">
+                {% for dev in all_developments %}
+                <div class="development-line" style="border-left-color: {{ dev.color }};">
+                    <div class="dev-option">{{ dev.tribit }}:</div>
+                    <div class="dev-content">
+                        <code>{{ dev.equation }}</code>
+                        <span class="arrow">→</span>
+                        <span class="cartesian">{{ dev.cartesian }}</span>
+                        <span class="arrow">→</span>
+                        <span class="polar-comp">{{ dev.polar_components }}</span>
+                        <span class="arrow">→</span>
+                        <span class="rectangular">{{ dev.rectangular }}</span>
+                        <span class="arrow">→</span>
+                        <span class="result" style="color: {{ dev.color }};">{{ dev.result }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <!-- Tabla resumen -->
+            <div class="table-card mt-4">
+                <h5 class="table-header">Tabla de Fases 8-PSK</h5>
+                <table class="neon-table center-table">
+                    <thead>
+                        <tr>
+                            <th>Q</th>
+                            <th>I</th>
+                            <th>C</th>
+                            <th>Fase de Salida</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in table_data %}
+                        <tr>
+                            <td>{{ row.q }}</td>
+                            <td>{{ row.i }}</td>
+                            <td>{{ row.c }}</td>
+                            <td class="phase-value" style="color: {{ row.color }};">{{ row.phase }}°</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- DIAGRAMA DE CONSTELACIÓN -->
+        <div class="exercise-card">
+            <h2 class="card-title">Diagrama de Constelación</h2>
+            
+            <div class="image-container">
+                <img src="data:image/png;base64,{{ constellation_image }}" 
+                     alt="Diagrama de Constelación 8-PSK" 
+                     class="generated-image">
+            </div>
+        </div>
+
+        <!-- DIAGRAMA FASORIAL -->
+        <div class="exercise-card">
+            <h2 class="card-title">Diagrama Fasorial</h2>
+            
+            <div class="image-container">
+                <img src="data:image/png;base64,{{ phasor_image }}" 
+                     alt="Diagrama Fasorial 8-PSK" 
+                     class="generated-image">
+            </div>
+        </div>
+
+        <!-- SALIDA MODULADA -->
+        <div class="exercise-card highlight-card">
+            <h2 class="card-title highlight-title">Salida Modulada 8-PSK</h2>
+            
+            <div class="image-container">
+                <img src="data:image/png;base64,{{ modulated_image }}" 
+                     alt="Salida Modulada 8-PSK" 
+                     class="generated-image">
+            </div>
+        </div>
+        
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
