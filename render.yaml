@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: psk8-modulacion
+    env: python
+    buildCommand: ./build.sh
+    startCommand: gunicorn config.wsgi
+    plan: free
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: False
+      - key: PYTHON_VERSION
+        value: 3.11.9
